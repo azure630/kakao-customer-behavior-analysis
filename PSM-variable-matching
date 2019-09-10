@@ -1,0 +1,180 @@
+
+app = read.csv("app.csv")
+head(app)
+app
+install.packages("plm")
+library(plm)
+app.p = pdata.frame(app, index=c("panel_id","week"))
+nrow(app_treat1)
+#####PSM######
+install.packages("MatchIt")
+library(MatchIt)
+app_pre <- sqldf("select * from app where week = 1")
+app_after <- sqldf("select * from app where week = 2")
+app_treat1<- sqldf("select * from app where tg = 1 ")
+app_treat1<- sqldf("select * from app_treat1 where week = 2")
+nrow(app_treat1)
+remove(app_treat1)
+app_treat1$t_anipang
+app_idk<-sqldf("select * from app where tg = 1 & week = 2")
+app_treat1
+set.seed(12345)
+?set.seed
+?twang
+# One-to-One without replacement and caliper
+NN1.out = matchit(tg ~ age + income + education + gender + t_kakao_talk 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 1)
+summary(NN1.out)
+plot(NN1.out, type = "hist")
+
+# PSM - nearest neighbor one-to-one matching with replacement and without caliper
+NN2.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 1, replacement = T)
+summary(NN2.out)
+plot(NN2.out, type = "hist")
+
+# PSM - nearest neighbor one-to-one matching without replacement and with caliper = 0.2
+NN3.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 1, caliper = 0.2)
+summary(NN3.out)
+plot(NN3.out, type = "hist") #very similar distance = 99.2776
+
+#PSM - nearest neighbor one-to-one matching with replacement and with caliper = 0.2
+NN4.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 1, replacement = T, caliper = 0.2)
+summary(NN4.out)
+plot(NN4.out, type = "hist")
+
+# PSM - nearest neighbor k-to-one matching without replacement and without caliper
+NN5.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 2)
+summary(NN5.out)
+plot(NN5.out, type = "hist")
+
+# PSM - nearest neighbor k-to-one matching without replacement and without caliper
+NN6.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 3, replacement = F)
+summary(NN6.out)
+plot(NN6.out, type = "hist")
+
+# PSM - nearest neighbor k-to-one matching with replacement and without caliper
+NN7.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 2, replacement = T)
+summary(NN7.out)
+plot(NN7.out, type = "hist")
+
+
+NN8.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 3, replacement = T)
+summary(NN8.out)
+plot(NN8.out, type = "hist")
+
+
+# PSM - nearest neighbor k-to-one matching with replacement and with caliper = 0.2
+NN9.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 2, replacement = T, caliper = 0.2)
+summary(NN9.out)
+plot(NN9.out, type = "hist") #very similar
+
+# PSM - nearest neighbor k-to-one matching with replacement and with caliper = 0.2
+NN10.out = matchit(tg ~ age + income + education + gender + t_kakao_talk + t_anipang 
+                  + t_kakao_story + t_kakao_game + n_kakao_game + t_non_kakao_game 
+                  + n_non_kakao_game + t_non_kakao_story + n_non_kakao_story + t_non_kakao_talk
+                  +  n_non_kakao_talk + t_non_kakao + n_non_kakao, data = app_pre, method = "nearest", ratio = 3, replacement = T, caliper = 0.2)
+summary(NN10.out)
+plot(NN10.out, type = "hist")
+
+dat1 = match.data(NN1.out)
+str(dat1)
+dat2 = match.data(NN3.out)
+str(dat2)
+
+dat3 = match.data(NN10.out)
+####combine dataset
+app1 <- sqldf("select * from app, dat1 where dat1.panel_id = app.panel_id")
+head(app1)
+app1 <- app1[,1:21]
+app2 <- sqldf("select * from app, dat2 where dat2.panel_id = app.panel_id")
+head(app2)
+app2 <- app2[,1:21]
+app3 <- sqldf("select * from app, dat3 where dat3.panel_id = app.panel_id")
+head(app3)
+app3 <- app3[,1:21]
+
+
+
+
+
+
+
+####paired t test
+matches = data.frame(NN1.out$match.matrix)
+matches
+group1 = match (row.names(matches), row.names(match.data))
+group2 = match (matches$X1, row.names (match.data))
+t.test()
+
+
+
+###Estimating treatment effect
+
+###Model
+library(plm)
+app.p1 = pdata.frame(app1, index=c("panel_id","week"))
+app.p2 = pdata.frame(app2, index=c("panel_id","week"))
+app.p3 = pdata.frame(app3, index=c("panel_id","week"))
+
+head(app.p)
+summary(lm(log(t_non_kakao+1) ~ (panel_id) + as.factor(week) + ii  + log(t_non_kakao_story+1) + log(t_non_kakao_talk+1) + log(t_non_kakao_game + 1) , data=app.p)) 
+summary(lm(log(t_non_kakao_story+1) ~ (panel_id) + as.factor(week) + ii + log(t_non_kakao_story+1) + log(t_non_kakao_talk+1) + log(t_non_kakao_game + 1) + log(t_non_kakao+1), data=app.p))
+
+
+summary(lm(n_non_kakao) ~ (panel_id) + as.factor(week) + ii + log(t_non_kakao_story+1) + log(t_non_kakao_talk+1) + log(t_non_kakao_game + 1) , data=app.p)
+app.p$talkr = log(app.p$t_kakao_talk+1)/log(app.p$t_non_kakao_talk+1)
+app.p$talkr
+
+app.p$storyr = log(app.p$t_kakao_story+1)/(log(app.p$t_non_kakao_story+1))
+
+log(app.p$t_kakao_story+1) 
+app.p$gamer = log(app.p$t_kakao_game+1)/log(app.p$t_non_kakao_game+1)
+summary(lm(talkr ~ (panel_id) + as.factor(week) + ii  , data=app.p))
+summary(lm(gamer ~ (panel_id) + as.factor(week) + ii  , data=app.p)) 
+summary(lm(storyr ~ (panel_id) + as.factor(week) + ii  , data=app.p))
+
+
+####count variable regression
+install.packages("pglm")
+library(pglm)
+?pglm
+summary(glm(n_kakao_game ~ (panel_id) + as.factor(week) + ii  , family = "poisson", data=app.p))
+summary(lm(n_kakao_story ~ (panel_id) + as.factor(week) + ii   , family = poisson, data=app.p))
+
+####what influence the adoption of anipang: DV: ii; IV: demo variables
+head(app.p)
+summary(glm(ii~ age + income + education + gender,family = "poisson", data = app_treat1))
+summary(glm(ii~ age + income + education + gender,family = "poisson", data = app_treat1))
+summary(glm(n_kakao_game ~ as.factor(age) + as.factor(income) + as.factor(education) + as.factor(gender) 
+            + as.factor(age)*as.factor(week)+as.factor(income)*as.factor(week) + as.factor(education)*as.factor(week)
+            + as.factor(gender)*as.factor(week),family = "poisson" , data = app_treat1))
+
+summary(glm(n_kakao_game ~ age + income + education + gender + age + income + education + gender ,family = "poisson" , data = app_idk))
+summary(app_treat1)
+summary(app)        
