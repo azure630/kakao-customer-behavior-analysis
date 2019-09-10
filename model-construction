@@ -1,0 +1,148 @@
+for (i in 1:length(app.p1)) {
+  if (app.p1$t_kakao_talk || app.p1$t_non_kakao_talk != 0) {
+    app.p1$talkr <- app.p1$t_kakao_talk / (app.p1$t_kakao_talk+1 + app.p1$t_non_kakao_talk+1)
+  }
+  else {
+    app.p1$talkr <- 0
+  }
+  i = i + 1
+}
+mean(app.p1$talkr)
+
+remove(app_treat1)
+app_treat1 = sqldf("select * from app where tg ")
+app_treat1 = sqldf("select * from app_treat1 where week = 2")
+nrow(app_treat1)
+nrow(app_treat1)
+mean(app_treat1$t_anipang)
+
+for {i in 1:length(app_treat1), if (app_treat1$t_anipang < 7107.625 ||app_treat1$t_anipang = 7107.625 )
+  {app_treat1$value = 0}
+  else{
+    app_treat1$value = 1
+  }
+  i = i + 1
+  }
+  
+  length(app.p1$panel_id)
+  
+sqldf("select * from app_treat1 where t_anipang < 7107.625")
+for (i in 1:nrow(app_treat1)) {
+  if (app_treat1$t_anipang < mean(app_treat1$t_anipang)   ) {
+    app_treat1$t_anipang <- 0
+  }
+  else {
+    app_treat1$t_anipang <- 1
+  }
+  i = i + 1
+}
+nrow()
+app_treat1$t_anipang
+
+
+for (i in 1:length(app.p1)) {
+  if (app.p1$t_kakao_story || app.p1$t_non_kakao_story != 0) {
+    app.p1$storyr <- app.p1$t_kakao_story / (app.p1$t_kakao_story + app.p1$t_non_kakao_story)
+  }
+  else {
+    app.p1$storyr <- 0
+  }
+  i = i + 1
+}
+
+plot(app.p1$gamer, type = "hist")
+
+##### ratio variable
+#dummy variables
+
+summary(lm(talkr ~ as.factor(panel_id) + as.factor(week) + ii, data=app.p1)) #not sig
+summary(lm(gamer ~ as.factor(panel_id) + as.factor(week) + ii, data=app.p1)) #significant beta = 1.443e-01
+summary(lm(storyr ~ as.factor(panel_id) + as.factor(week) + ii, data=app.p1)) #significant beta = 1.114e-01
+
+#fd
+summary(plm(talkr ~  ii, data=app.p1, model = "fd")) #not sig
+summary(plm(gamer ~  ii, data=app.p1, model = "fd")) #sig beta = 0.14431421
+summary(plm(storyr ~ ii, data=app.p1, model = "fd")) #sig beta =  0.111423
+
+#fe
+summary(plm(talkr ~  ii, data=app.p1, model = "within"))
+summary(plm(gamer ~  ii, data=app.p1, model = "within")) #sig beta =  0.144892
+summary(plm(storyr ~ ii, data=app.p1, model = "within")) #sig beta =  0.074760
+
+#####count variable
+library(MASS)
+
+summary(glm(n_kakao_game ~ as.factor(ii) + as.factor(age) + as.factor(income) + as.factor(gender) 
+            + as.factor(education) + t_kakao_talk + t_kakao_story + t_kakao_game,  
+            data = app.p1, family = "poisson"))
+summary(glm.nb(n_kakao_game ~ as.factor(ii) + as.factor(age) + as.factor(income) + as.factor(gender) 
+            + as.factor(education) + t_kakao_talk + t_kakao_story + t_kakao_game,  
+            data = app.p1))
+summary(glm.nb(n_non_kakao_game ~ ii + as.factor(week) + as.factor(panel_id),  link = (logit),data = app.p1))
+
+summary(glm.nb(n_kakao_game ~ ii + as.factor(week) + panel_id ,  data = app.p3)) #sig beta =  3.339e+00 / 3.125e+00 /  2.885e+00
+summary(lm(n_kakao_game ~ ii + as.factor(week) + as.factor(panel_id),  data = app.p3)) # 3.339e+00 / 3.125e+00 /  2.885e+00
+summary(glm.nb(n_kakao_game ~ ii + as.factor(week) + panel_id ,  data = app.p3))
+summary(glm(ii ~ as.factor(age) + as.factor(income) + as.factor(gender) + as.factor(education),  data = app.p2)) 
+summary(glm(n_non_kakao_game ~ ii + as.factor(week) + as.factor(panel_id) + t_non_kakao + n_non_kakao + t_non_kakao_story + 
+              n_non_kakao_story + t_non_kakao_talk + n_non_kakao_talk + t_non_kakao_game
+            , data = app.p3, family = "poisson" ))
+summary(glm.nb(n_non_kakao_game ~  ii + as.factor(week) + as.factor(panel_id) , data = app.p2, link = log))
+
+
+###valuable customer analysis
+app_treat1 = sqldf("select * from app.p1 where tg == 1 ")
+app_treat1 = sqldf("select * from app_treat1 where week == 2")
+summary(lm(t_anipang ~ as.factor(gender) + as.factor(education) + as.factor(age) + as.factor (income), app_treat1 ))
+
+
+
+
+
+app.p1
+app$t_anipang
+mean(app$t_anipang)
+
+mean(app_treat1$t_anipang)
+remove(app)
+remove (app_treat1)
+
+mean(app_treat1$t_anipang)
+nrow(app_treat1)
+?length
+length(app_treat1)
+
+if(app_treat1$t_anipang < 7107.625 || app_treat1$t_anipang == 7107.625) {
+  app_treat1$value <- 0
+} else {
+  app_treat$value <- 1
+}
+app_treat1$value
+
+for (i in 1:length(app_treat1)) {
+  if(app_treat1$t_anipang[i] > mean(app_treat1$t_anipang)) {
+    app_treat1$value[i] <- 1
+  } else {
+    app_treat1$value[i] <- 0
+  }
+  i = i + 1
+}
+
+app_treat1$value
+remove(app_treat1)
+
+summary(glm(value ~ as.factor(gender) + as.factor(education) + as.factor(age) + as.factor (income), family = binomial(link = logit), app_treat1))
+
+summary(glm(n_kakao_game ~   t_anipang + t_kakao_talk + t_kakao_story , app.p1))
+summary(glm( n_non_kakao_game ~  as.factor(week) + as.factor(panel_id) + ii + t_non_kakao_story + n_non_kakao_story
+             + t_non_kakao_talk + n_non_kakao_talk
+             + t_non_kakao, family = "poisson", data = app.p1))
+
+lm(n_kakao_game )
+
+summary(lm(t_anipang ~ t_kakao_talk  + t_kakao_story + t_kakao_game,  data = app_treat1))
+cor(app_treat1$t_anipang, app_treat1$t_kakao_talk)
+
+cor(app$t_anipang, app$t_kakao_game)
+
+
